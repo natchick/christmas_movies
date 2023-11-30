@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 8081 ;
 const cors = require('cors');
-// const knex = require(knex)
+const knex = require('knex')(require('./knexfile.js')["development"])
 
 app.use(express.json());
 
@@ -16,28 +16,28 @@ app.use(express.json());
 app.use(cors()); 
 
 
-let christmasMovies = [
-    {
-        "id": 1,
-        "title": "Polar Express",
-        "year": 2004,
-    },
-    {
-        "id": 2,
-        "title": "Elf",
-        "year": 2003, 
-    },
-    {
-        "id": 3,
-        "title": "Home Alone",
-        "year": 1990,
-    },
-    {
-        "id": 4,
-        "title": "It's a Wonderful Life",
-        "year": 1946,
-    }
-];
+// let christmasMovies = [
+//     {
+//         "id": 1,
+//         "title": "Polar Express",
+//         "year": 2004,
+//     },
+//     {
+//         "id": 2,
+//         "title": "Elf",
+//         "year": 2003, 
+//     },
+//     {
+//         "id": 3,
+//         "title": "Home Alone",
+//         "year": 1990,
+//     },
+//     {
+//         "id": 4,
+//         "title": "It's a Wonderful Life",
+//         "year": 1946,
+//     }
+// ];
 
 
 app.listen(port, () => {
@@ -49,6 +49,10 @@ app.get('/', (req, res) => {
 })
 
 app.get('/movies', (req, res) => {
-    res.send(christmasMovies)
+    knex('movies_table')
+        .select('*')
+        .then(movies => {
+            res.json(movies);
+        })
 })
 
