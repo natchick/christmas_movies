@@ -51,9 +51,10 @@ button:hover {
 
  .update-section {
   position: absolute;
-  bottom: 0;
+  top: 0;
   right: 0;
   padding: 20px;
-  background: linear-gradient(to right, #96bcca, #fdfdfd);
+  background-image: url('https://i.pinimg.com/originals/05/ff/48/05ff4840352d2562a9e8d8afb2da053d.gif');
+  /* background: linear-gradient(to right, #96bcca, #fdfdfd); */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
