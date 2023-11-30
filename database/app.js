@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 8081 ;
+const port = 8081;
 const cors = require('cors');
 const knex = require('knex')(require('./knexfile.js')["development"])
 
@@ -13,7 +13,7 @@ app.use(express.json());
 //     next();
 // });
 
-app.use(cors()); 
+app.use(cors());
 
 
 // let christmasMovies = [
@@ -42,18 +42,21 @@ app.use(cors());
 
 
 app.post('/movies', (req, res) => {
-    let movieID = req.body;
+    const movieData = req.body;
 
     knex('movies_table')
-    .insert({
-        "id": 10,
-        "title": "The Santa Clause",
-        "year": 1994,
-    })
-    .into('movies_table')
-    .then(() => res.json({ message: 'Movie added successfully'}))
-} );
+        .insert({
+            title: movieData.title,
+            year: movieData.year,
+        })
+        .returning('*')
+        .into('movies_table')
+        .then((insertedMovies) => {
+            const insertedMovie = insertedMovies[0];
+            res.json({ message: 'Movie added successfully', movie: insertedMovie });
+        })
 
+});
 app.listen(port, () => {
     console.log(`Your applciation is running on port ${port}`)
 })
@@ -71,13 +74,13 @@ app.get('/movies', (req, res) => {
 })
 
 app.get('/movies/:id', (req, res) => {
-    var {id} = req.params;
+    var { id } = req.params;
     knex('movies_table')
-    .select('*')
-    .where('id', id)
-    .then(data => {
-        res.json(data);
-    } )
+        .select('*')
+        .where('id', id)
+        .then(data => {
+            res.json(data);
+        })
 
 })
 
@@ -85,19 +88,19 @@ app.delete('/movies/:id', (req, res) => {
     let movieID = req.params.id;
 
     knex('movies_table')
-    .where('id', movieID)
-    .del()
-    .then(() => res.json({ message: 'Movie deleted successfully'}))
-} );
+        .where('id', movieID)
+        .del()
+        .then(() => res.json({ message: 'Movie deleted successfully' }))
+});
 
 app.patch('/movies/:id', (req, res) => {
     let movieID = req.params.id;
     let newMovie = req.body
 
     knex('movies_table')
-    .where('id', movieID)
-    .update({
-        'title' : newMovie.title
-    })
-    .then(() => res.json(newMovie))
-} );
+        .where('id', movieID)
+        .update({
+            'title': newMovie.title
+        })
+        .then(() => res.json(newMovie))
+});
