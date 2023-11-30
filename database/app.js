@@ -40,6 +40,20 @@ app.use(cors());
 // ];
 
 
+
+app.post('/movies', (req, res) => {
+    let movieID = req.body;
+
+    knex('movies_table')
+    .insert({
+        "id": 10,
+        "title": "The Santa Clause",
+        "year": 1994,
+    })
+    .into('movies_table')
+    .then(() => res.json({ message: 'Movie added successfully'}))
+} );
+
 app.listen(port, () => {
     console.log(`Your applciation is running on port ${port}`)
 })
@@ -56,3 +70,34 @@ app.get('/movies', (req, res) => {
         })
 })
 
+app.get('/movies/:id', (req, res) => {
+    var {id} = req.params;
+    knex('movies_table')
+    .select('*')
+    .where('id', id)
+    .then(data => {
+        res.json(data);
+    } )
+
+})
+
+app.delete('/movies/:id', (req, res) => {
+    let movieID = req.params.id;
+
+    knex('movies_table')
+    .where('id', movieID)
+    .del()
+    .then(() => res.json({ message: 'Movie deleted successfully'}))
+} );
+
+app.patch('/movies/:id', (req, res) => {
+    let movieID = req.params.id;
+    let newMovie = req.body
+
+    knex('movies_table')
+    .where('id', movieID)
+    .update({
+        'title' : newMovie.title
+    })
+    .then(() => res.json(newMovie))
+} );
